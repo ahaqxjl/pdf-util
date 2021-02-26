@@ -1,5 +1,6 @@
 import os
 import glob
+from pathlib import Path
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
 
@@ -54,14 +55,16 @@ def pdf_splitter(path):
         path (str): 拆分前的文件路径
     """
     fname = os.path.splitext(os.path.basename(path))[0]
+    Path(fname).mkdir(parents=True, exist_ok=True)
 
     pdf = PdfFileReader(path)
     for page in range(pdf.getNumPages()):
         pdf_writer = PdfFileWriter()
         pdf_writer.addPage(pdf.getPage(page))
 
-        output_filename = '{}_page_{}.pdf'.format(
-            fname, page+1)
+        # output_filename = '{}_page_{}.pdf'.format(
+        #     page+1, fname)
+        output_filename = f'{fname}/{page + 1}.pdf'
 
         with open(output_filename, 'wb') as out:
             pdf_writer.write(out)
