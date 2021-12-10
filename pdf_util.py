@@ -1,6 +1,7 @@
 import os
 import glob
 from pathlib import Path
+from PIL import Image
 from PyPDF2 import PdfFileReader, PdfFileWriter, PdfFileMerger
 
 
@@ -87,6 +88,21 @@ def merger(output_path, input_paths):
         
     with open(output_path, 'wb') as fileobj:
         pdf_merger.write(fileobj)
+
+
+def merge_from_images(output_path, image_paths):
+    """将多个图片合并为pdf文件
+
+    Args:
+        output_path (str): 合并后的pdf文件路径
+        image_paths (str): 待生成pdf的图片路径（数组）
+    """
+    images = []
+    for path in image_paths:
+        im = Image.open(path)
+        images.append(im)
+
+    images[0].save(output_path, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:])
 
 
 if __name__ == '__main__':
